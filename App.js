@@ -1,6 +1,5 @@
-
-import React, { Component } from "react";
-import { ListView } from "react-native";
+import React, {Component} from "react";
+import {ListView} from "react-native";
 import {
     Container,
     Header,
@@ -13,7 +12,10 @@ import {
     Text,
     Left,
     Right,
-    Body
+    Body,
+    Item,
+    Input,
+    Form
 } from "native-base";
 import styles from "./styles";
 
@@ -32,7 +34,7 @@ const datas = [
     "😀"
 ];
 
-export  default  class App extends Component {
+export default class App extends Component {
 
     /**
      * Simple constructor.
@@ -40,7 +42,7 @@ export  default  class App extends Component {
      */
     constructor(props) {
         super(props);
-        this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             basic: true,
             listViewData: datas
@@ -59,7 +61,7 @@ export  default  class App extends Component {
         rowMap[`${secId}${rowId}`].props.closeRow();
         const newData = [...this.state.listViewData];
         newData.splice(rowId, 1);
-        this.setState({ listViewData: newData });
+        this.setState({listViewData: newData});
     }
 
     /**
@@ -68,7 +70,7 @@ export  default  class App extends Component {
     addRow() {
         const newData = [...this.state.listViewData];
         newData.push("IT WORKS DUDE");
-        this.setState({ listViewData: newData });
+        this.setState({listViewData: newData});
     }
 
     /**
@@ -79,20 +81,22 @@ export  default  class App extends Component {
         return (
             <Container style={styles.container}>
                 <Header>
-                    <Left>
+                    {/*This left function pushes the title to the left.*/}                    
+                    <Left/>
 
-                    </Left>
-                    <Body style={{ flex: 3 }}>
-                    <Title>Multiple List Swipe</Title>
+                    <Body style={{flex: 3}}>
+                    <Title>To Do List</Title>
                     </Body>
-                    <Right />
+                    {/* This right command pushes the title to the right thus centering it. */}
+                    <Right/>
                 </Header>
 
+                {/* This is the content tab where all of the items are going to be stored */}
                 <Content>
                     <List
                         dataSource={this.ds.cloneWithRows(this.state.listViewData)}
                         renderRow={data =>
-                            <ListItem style={{ paddingLeft: 20 }}>
+                            <ListItem style={{paddingLeft: 20}}>
                                 <Text>
                                     {data}
                                 </Text>
@@ -108,7 +112,7 @@ export  default  class App extends Component {
                                     justifyContent: "center"
                                 }}
                             >
-                                <Icon active name="information-circle" />
+                                <Icon active name="information-circle"/>
                             </Button>}
                         renderRightHiddenRow={(data, secId, rowId, rowMap) =>
                             <Button
@@ -121,12 +125,21 @@ export  default  class App extends Component {
                                     justifyContent: "center"
                                 }}
                             >
-                                <Icon active name="trash" />
+                                <Icon active name="trash"/>
                             </Button>}
                         leftOpenValue={75}
                         rightOpenValue={-75}
                     />
                 </Content>
+
+                
+                  <Form>
+                    <Item>
+                      <Input placeholder="TEXTBOX NOT ITEM" />
+                    </Item>
+                  </Form>
+               
+
             </Container>
         );
     }
