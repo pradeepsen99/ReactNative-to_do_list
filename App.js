@@ -1,4 +1,6 @@
+
 import React, { Component } from "react";
+import { ListView } from "react-native";
 import {
     Container,
     Header,
@@ -6,8 +8,8 @@ import {
     Content,
     Button,
     Icon,
+    List,
     ListItem,
-    Radio,
     Text,
     Left,
     Right,
@@ -15,123 +17,115 @@ import {
 } from "native-base";
 import styles from "./styles";
 
-export default class App extends Component {
+/**
+ * This is the Array that holdes all the To-Do-List Items
+ * @type {string[]} The main data array.
+ */
+const datas = [
+    "Get eggs",
+    "Milk",
+    "Brush teeth",
+    "Hola dude",
+    "MMhm",
+    "Okedhjedhjehdjehdjehdjhedjhejdhejhdjehdjehdjehdjehjdhejdhejhdjehdjhed",
+    "12345",
+    "😀"
+];
+
+export  default  class App extends Component {
+
+    /**
+     * Simple constructor.
+     * @param props
+     */
     constructor(props) {
         super(props);
+        this.ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
-            radio1: false,
-            radio2: false,
-            radio3: false,
-            radio4: true
+            basic: true,
+            listViewData: datas
         };
     }
-    toggleRadio1() {
-        this.setState({
-            radio1: true,
-            radio2: false,
-            radio3: false,
-            radio4: false
-        });
+
+    /**
+     * This function removes the selected item from the array
+     * Swiping left on the element will give a trash symbol where
+     * the user can delete the selected element.
+     * @param secId
+     * @param rowId
+     * @param rowMap
+     */
+    deleteRow(secId, rowId, rowMap) {
+        rowMap[`${secId}${rowId}`].props.closeRow();
+        const newData = [...this.state.listViewData];
+        newData.splice(rowId, 1);
+        this.setState({ listViewData: newData });
     }
-    toggleRadio2() {
-        this.setState({
-            radio1: false,
-            radio2: true,
-            radio3: false,
-            radio4: false
-        });
+
+    /**
+     * This function adds an element to the bottom of the array.
+     */
+    addRow() {
+        const newData = [...this.state.listViewData];
+        newData.push("IT WORKS DUDE");
+        this.setState({ listViewData: newData });
     }
-    toggleRadio3() {
-        this.setState({
-            radio1: false,
-            radio2: false,
-            radio3: true,
-            radio4: false
-        });
-    }
-    toggleRadio4() {
-        this.setState({
-            radio1: false,
-            radio2: false,
-            radio3: false,
-            radio4: true
-        });
-    }
+
+    /**
+     * Main render, renders the entire view of the app.
+     * @returns {*} n/a
+     */
     render() {
         return (
             <Container style={styles.container}>
                 <Header>
                     <Left>
-                        <Button
-                            transparent
-                            onPress={() => this.props.navigation.navigate("DrawerOpen")}
-                        >
-                            <Icon name="menu" />
-                        </Button>
+                        
                     </Left>
-                    <Body>
-                    <Title>Radio</Title>
+                    <Body style={{ flex: 3 }}>
+                    <Title>Multiple List Swipe</Title>
                     </Body>
                     <Right />
                 </Header>
 
                 <Content>
-                    <ListItem
-                        selected={this.state.radio1}
-                        onPress={() => this.toggleRadio1()}
-                    >
-                        <Left>
-                            <Text>Lunch Break</Text>
-                        </Left>
-                        <Right>
-                            <Radio
-                                selected={this.state.radio1}
-                                onPress={() => this.toggleRadio1()}
-                            />
-                        </Right>
-                    </ListItem>
-                    <ListItem
-                        selected={this.state.radio2}
-                        onPress={() => this.toggleRadio2()}
-                    >
-                        <Left>
-                            <Text>Daily Stand Up</Text>
-                        </Left>
-                        <Right>
-                            <Radio
-                                selected={this.state.radio2}
-                                onPress={() => this.toggleRadio2()}
-                            />
-                        </Right>
-                    </ListItem>
-                    <ListItem
-                        selected={this.state.radio3}
-                        onPress={() => this.toggleRadio3()}
-                    >
-                        <Left>
-                            <Text>Finish List Screen</Text>
-                        </Left>
-                        <Right>
-                            <Radio
-                                selected={this.state.radio3}
-                                onPress={() => this.toggleRadio3()}
-                            />
-                        </Right>
-                    </ListItem>
-                    <ListItem
-                        selected={this.state.radio4}
-                        onPress={() => this.toggleRadio4()}
-                    >
-                        <Left>
-                            <Text>Discussion with Client</Text>
-                        </Left>
-                        <Right>
-                            <Radio
-                                selected={this.state.radio4}
-                                onPress={() => this.toggleRadio4()}
-                            />
-                        </Right>
-                    </ListItem>
+                    <List
+                        dataSource={this.ds.cloneWithRows(this.state.listViewData)}
+                        renderRow={data =>
+                            <ListItem style={{ paddingLeft: 20 }}>
+                                <Text>
+                                    {data}
+                                </Text>
+                            </ListItem>}
+                        renderLeftHiddenRow={data =>
+                            <Button
+                                full
+                                onPress={() => alert(data)}
+                                style={{
+                                    backgroundColor: "#CCC",
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                            >
+                                <Icon active name="information-circle" />
+                            </Button>}
+                        renderRightHiddenRow={(data, secId, rowId, rowMap) =>
+                            <Button
+                                full
+                                danger
+                                onPress={_ => this.deleteRow(secId, rowId, rowMap)}
+                                style={{
+                                    flex: 1,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                }}
+                            >
+                                <Icon active name="trash" />
+                            </Button>}
+                        leftOpenValue={75}
+                        rightOpenValue={-75}
+                    />
                 </Content>
             </Container>
         );
