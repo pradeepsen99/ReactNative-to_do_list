@@ -36,7 +36,7 @@ I use [Github](https://github.com) for versioning. For the versions available, s
 
 ## Authors
 
-* **Pradeep Senthil** - *Initial work* - [pradeepsen99](https://github.com/pradeepsen99)
+* **Pradeep Senthil** - *Whole app* - [pradeepsen99](https://github.com/pradeepsen99)
 
 ## License
 
