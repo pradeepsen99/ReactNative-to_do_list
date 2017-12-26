@@ -80,7 +80,7 @@ export  default  class App extends Component {
             <Container style={styles.container}>
                 <Header>
                     <Left>
-                        
+
                     </Left>
                     <Body style={{ flex: 3 }}>
                     <Title>Multiple List Swipe</Title>
