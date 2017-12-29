@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {ListView} from "react-native";
+import {ListView, Keyboard} from "react-native";
 import {
     Container,
     Header,
@@ -45,7 +45,8 @@ export default class App extends Component {
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state = {
             basic: true,
-            listViewData: datas
+            listViewData: datas,
+            text: ''
         };
     }
 
@@ -69,8 +70,17 @@ export default class App extends Component {
      */
     addRow() {
         const newData = [...this.state.listViewData];
-        newData.push("IT WORKS DUDE");
+        newData.push(this.state.text);
         this.setState({listViewData: newData});
+        Keyboard.dismiss();
+        this.setState({text: ""})
+    }
+
+    /**
+     * This function gets the text from the textbox and stores it
+     */
+    handleChange(event){
+        this.setState({value: event.target.value});
     }
 
     /**
@@ -90,6 +100,20 @@ export default class App extends Component {
                     {/* This right command pushes the title to the right thus centering it. */}
                     <Right/>
                 </Header>
+
+                <Form>
+                    <Item>
+                        <Input placeholder="TEXTBOX NOT ITEM"
+                               ref= {(el) => { this.text = el; }}
+                               onChangeText={(text) => this.setState({text})}
+                        />
+                        <Button full danger onPress={_ => this.addRow()}>
+                            <Icon active name="trash"/>
+                        </Button>
+                    </Item>
+                </Form>
+
+
 
                 {/* This is the content tab where all of the items are going to be stored */}
                 <Content>
@@ -127,19 +151,10 @@ export default class App extends Component {
                             >
                                 <Icon active name="trash"/>
                             </Button>}
-                        leftOpenValue={75}
+                        leftOpenValue={0}
                         rightOpenValue={-75}
                     />
                 </Content>
-
-                
-                  <Form>
-                    <Item>
-                      <Input placeholder="TEXTBOX NOT ITEM" />
-                    </Item>
-                  </Form>
-               
-
             </Container>
         );
     }
